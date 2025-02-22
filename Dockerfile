@@ -3,8 +3,8 @@ FROM node:18.19.0 As development
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install glob rimraf
-RUN npm install --only=development
+RUN npm install glob rimraf --legacy-peer-deps
+RUN npm install --only=development --legacy-peer-deps
 
 COPY . .
 
