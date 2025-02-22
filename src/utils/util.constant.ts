@@ -18,7 +18,7 @@ export const PASSWORD_MAX_LENGTH = 16;
 export const appName = process.env.APP_NAME ?? 'AUTH_MICROSERVICE';
 export const kafkaUrl = process.env.KAFKA_URL
   ? process.env.KAFKA_URL
-  : '104.248.162.129:29092';
+  : '104.248.162.129:9092';
 export const jwtSecret = process.env.JWT_SECRET
   ? process.env.JWT_SECRET
   : 'auth-microservice-secret-key';
