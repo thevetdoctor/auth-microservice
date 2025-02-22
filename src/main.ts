@@ -2,24 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { appName, kafkaUrl } from './utils';
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const port = process.env.PORT ?? 3001;
   try {
     const app = await NestFactory.create(AppModule);
-
-    // app.useGlobalPipes(new ValidationPipe({
-    //   whitelist: true,  // Strip out unexpected properties
-    //   forbidNonWhitelisted: true, // Throw error for extra properties
-    //   transform: true, // Automatically transform types
-    //   exceptionFactory: (errors) => {
-    //     const messages = errors.map(err =>
-    //       `${err.property} has invalid format`
-    //     );
-    //     return new BadRequestException(messages);
-    //   },
-    // }));
 
     app.enableCors();
     const config = new DocumentBuilder()

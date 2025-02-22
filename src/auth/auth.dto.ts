@@ -4,7 +4,7 @@ import { IsEmail, IsNotEmpty, MinLength, IsString } from 'class-validator';
 
 export class LoginDTO {
   @ApiProperty({
-    example: 'user@example.com',
+    example: 'consultoba@gmail.com',
     description: 'User email address',
   })
   @IsEmail({}, { message: 'Invalid email format' })
@@ -22,7 +22,7 @@ export class LoginDTO {
 
 export class SignupDTO {
   @ApiProperty({
-    example: 'user@example.com',
+    example: 'consultoba@gmail.com',
     description: 'User email address',
   })
   @IsEmail({}, { message: 'Invalid email format' })

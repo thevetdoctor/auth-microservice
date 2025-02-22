@@ -10,16 +10,18 @@ export class ConsumerService implements OnModuleInit {
 
     await consumer.connect();
     await consumer.subscribe({
-      topics: Object.values(KafkaTopics),
-      fromBeginning: true,
+      topics: [KafkaTopics.MAIL_SENT],
+      fromBeginning: false,
     });
 
     await consumer.run({
       eachMessage: async ({ topic, message }) => {
+        const msg = JSON.parse(message.value.toString());
         console.log(
           '\n',
-          `🚀 ${topic} Event Received:`,
-          message.value.toString(),
+          `🚀 Event Received: ${topic}`,
+          `${msg.topic}`,
+          msg,
           '\n',
         );
       },

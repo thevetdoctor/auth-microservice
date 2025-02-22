@@ -38,6 +38,7 @@ export enum NodeEnvironment {
 }
 
 export enum KafkaTopics {
+  MAIL_SENT = 'mail.sent',
   USER_LOGIN = 'user.login',
   USER_LOGIN_ERROR = 'user.login.error',
   USER_SIGNUP = 'user.signup',

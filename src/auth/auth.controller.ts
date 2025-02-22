@@ -1,16 +1,23 @@
-import { Controller, Post, Body, HttpStatus, Res } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, Res, Req } from '@nestjs/common';
 import { LoginDTO, SignupDTO } from './auth.dto';
 import { AuthService } from './auth.service';
 import { response } from 'oba-http-response';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() payload: LoginDTO, @Res() res: Response) {
+  async login(
+    @Body() payload: LoginDTO,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
     try {
+      const clientIp =
+        (req.headers['x-forwarded-for'] as string)?.split(',')[0] || req.ip;
+      console.log('Client IP:', clientIp);
       const token = await this.authService.login(payload);
       return response(res, HttpStatus.CREATED, { ...token }, null, 'Logged in');
     } catch (e) {
