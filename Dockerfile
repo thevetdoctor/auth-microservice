@@ -1,4 +1,4 @@
-FROM node:16.17.1 As development
+FROM node:18.19.0 As development
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node:16.17.1 as production
+FROM node:18.19.0 as production
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
@@ -19,7 +19,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install --only=production
+RUN npm install --only=production --legacy-peer-deps
 
 COPY . .
 
