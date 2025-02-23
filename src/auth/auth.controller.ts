@@ -3,7 +3,7 @@ import { LoginDTO, SignupDTO } from './auth.dto';
 import { AuthService } from './auth.service';
 import { response } from 'oba-http-response';
 import { Request, Response } from 'express';
-import { UAParser } from 'ua-parser-js';
+import { getIdentity } from 'src/utils';
 
 @Controller('auth')
 export class AuthController {
@@ -16,11 +16,7 @@ export class AuthController {
     @Res() res: Response,
   ) {
     try {
-      const parser = new UAParser(req.headers['user-agent']); // Get device info
-      const deviceInfo = `${parser.getBrowser().name} on ${parser.getOS().name} (${parser.getDevice().model || 'Unknown Device'})`;
-      const clientIp =
-        (req.headers['x-forwarded-for'] as string)?.split(',')[0] || req.ip;
-      console.log('Client IP:', clientIp, 'Device', deviceInfo);
+      const { clientIp, deviceInfo } = getIdentity(req);
       const token = await this.authService.login(payload, clientIp, deviceInfo);
       return response(res, HttpStatus.CREATED, { ...token }, null, 'Logged in');
     } catch (e) {
@@ -34,13 +30,13 @@ export class AuthController {
   }
 
   @Post('signup')
-  async signup(@Body() payload: SignupDTO, @Req() req: Request, @Res() res: Response) {
+  async signup(
+    @Body() payload: SignupDTO,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
     try {
-      const parser = new UAParser(req.headers['user-agent']); // Get device info
-      const deviceInfo = `${parser.getBrowser().name} on ${parser.getOS().name} (${parser.getDevice().model || 'Unknown Device'})`;
-      const clientIp =
-        (req.headers['x-forwarded-for'] as string)?.split(',')[0] || req.ip;
-      console.log('Client IP:', clientIp);
+      const { clientIp, deviceInfo } = getIdentity(req);
       await this.authService.signup(payload, clientIp, deviceInfo);
       return response(
         res,

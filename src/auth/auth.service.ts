@@ -39,7 +39,7 @@ export class AuthService {
       await this.kafkaProducer.sendMessage(KafkaTopics.USER_LOGIN, {
         email: payload.email,
         clientIp,
-        deviceInfo
+        deviceInfo,
       });
       return { accessToken: token };
     } catch (e) {
@@ -58,7 +58,11 @@ export class AuthService {
     try {
       const user = await this.userService.createUser(payload);
       // 🔥 Send signup event to Kafka
-      await this.kafkaProducer.sendMessage(KafkaTopics.USER_SIGNUP, { ...user, clientIp, deviceInfo });
+      await this.kafkaProducer.sendMessage(KafkaTopics.USER_SIGNUP, {
+        ...user,
+        clientIp,
+        deviceInfo,
+      });
       return { user };
     } catch (e) {
       // 🔥 Send signup error event to Kafka
