@@ -22,7 +22,7 @@ export class AuthService {
     private readonly kafkaProducer: ProducerService,
   ) {}
 
-  async login(payload: LoginDTO, clientIp: string) {
+  async login(payload: LoginDTO, clientIp: string, deviceInfo: string) {
     try {
       const { email, password } = payload;
 
@@ -38,7 +38,8 @@ export class AuthService {
       // 🔥 Send login event to Kafka
       await this.kafkaProducer.sendMessage(KafkaTopics.USER_LOGIN, {
         email: payload.email,
-        clientIp
+        clientIp,
+        deviceInfo
       });
       return { accessToken: token };
     } catch (e) {
@@ -46,23 +47,25 @@ export class AuthService {
       await this.kafkaProducer.sendMessage(KafkaTopics.USER_LOGIN_ERROR, {
         payload,
         clientIp,
+        deviceInfo,
         error: e.message,
       });
       throw new BadRequestException(e.message);
     }
   }
 
-  async signup(payload: SignupDTO, clientIp: string) {
+  async signup(payload: SignupDTO, clientIp: string, deviceInfo: string) {
     try {
       const user = await this.userService.createUser(payload);
       // 🔥 Send signup event to Kafka
-      await this.kafkaProducer.sendMessage(KafkaTopics.USER_SIGNUP, { ...user, clientIp });
+      await this.kafkaProducer.sendMessage(KafkaTopics.USER_SIGNUP, { ...user, clientIp, deviceInfo });
       return { user };
     } catch (e) {
       // 🔥 Send signup error event to Kafka
       await this.kafkaProducer.sendMessage(KafkaTopics.USER_SIGNUP_ERROR, {
         payload,
         clientIp,
+        deviceInfo,
         error: e.message,
       });
       throw new BadRequestException(e.message);

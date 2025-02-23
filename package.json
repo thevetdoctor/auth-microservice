@@ -42,7 +42,8 @@
     "sequelize": "^6.37.5",
     "sequelize-typescript": "^2.1.6",
     "sqlite3": "^5.1.7",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "ua-parser-js": "^2.0.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
