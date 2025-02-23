@@ -22,7 +22,7 @@ export class AuthService {
     private readonly kafkaProducer: ProducerService,
   ) {}
 
-  async login(payload: LoginDTO) {
+  async login(payload: LoginDTO, clientIp: string) {
     try {
       const { email, password } = payload;
 
@@ -38,12 +38,14 @@ export class AuthService {
       // 🔥 Send login event to Kafka
       await this.kafkaProducer.sendMessage(KafkaTopics.USER_LOGIN, {
         email: payload.email,
+        clientIp
       });
       return { accessToken: token };
     } catch (e) {
       // 🔥 Send login error event to Kafka
       await this.kafkaProducer.sendMessage(KafkaTopics.USER_LOGIN_ERROR, {
         payload,
+        clientIp,
         error: e.message,
       });
       throw new BadRequestException(e.message);

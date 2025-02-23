@@ -18,7 +18,7 @@ export class AuthController {
       const clientIp =
         (req.headers['x-forwarded-for'] as string)?.split(',')[0] || req.ip;
       console.log('Client IP:', clientIp);
-      const token = await this.authService.login(payload);
+      const token = await this.authService.login(payload, clientIp);
       return response(res, HttpStatus.CREATED, { ...token }, null, 'Logged in');
     } catch (e) {
       return response(
