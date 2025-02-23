@@ -42,6 +42,7 @@ jobs:
           script: |
             cd ~/
             docker-compose -f docker-compose-microservice.yml pull auth-microservice
+            docker-compose -f docker-compose-microservice.yml stop auth-microservice
             docker-compose -f docker-compose-microservice.yml up -d
             exit
 
