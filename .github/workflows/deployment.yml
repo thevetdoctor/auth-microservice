@@ -41,13 +41,10 @@ jobs:
       #     passphrase: ${{ secrets.SSH_PASSPHRASE }}
       #     script: |
       #       cd ~/
-      #       docker-compose -f docker-compose-ussd.yml pull ussd_service
-      #       docker-compose -f docker-compose-ussd.yml up -d
+      #       docker-compose -f docker-compose-microservice.yml pull auth-microservice
+      #       docker-compose -f docker-compose-microservice.yml up -d
       #       exit
 
-   notify:
-    runs-on: ubuntu-latest
-    steps:
       - name: Send Email Notification
         uses: dawidd6/action-send-mail@v3
         with:

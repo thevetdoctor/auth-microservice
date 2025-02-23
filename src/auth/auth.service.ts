@@ -52,16 +52,17 @@ export class AuthService {
     }
   }
 
-  async signup(payload: any) {
+  async signup(payload: SignupDTO, clientIp: string) {
     try {
       const user = await this.userService.createUser(payload);
       // 🔥 Send signup event to Kafka
-      await this.kafkaProducer.sendMessage(KafkaTopics.USER_SIGNUP, user);
+      await this.kafkaProducer.sendMessage(KafkaTopics.USER_SIGNUP, { ...user, clientIp });
       return { user };
     } catch (e) {
       // 🔥 Send signup error event to Kafka
       await this.kafkaProducer.sendMessage(KafkaTopics.USER_SIGNUP_ERROR, {
         payload,
+        clientIp,
         error: e.message,
       });
       throw new BadRequestException(e.message);

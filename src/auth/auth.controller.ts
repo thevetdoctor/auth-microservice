@@ -31,9 +31,12 @@ export class AuthController {
   }
 
   @Post('signup')
-  async signup(@Body() payload: SignupDTO, @Res() res: Response) {
+  async signup(@Body() payload: SignupDTO, @Req() req: Request, @Res() res: Response) {
     try {
-      await this.authService.signup(payload);
+      const clientIp =
+        (req.headers['x-forwarded-for'] as string)?.split(',')[0] || req.ip;
+      console.log('Client IP:', clientIp);
+      await this.authService.signup(payload, clientIp);
       return response(
         res,
         HttpStatus.CREATED,
