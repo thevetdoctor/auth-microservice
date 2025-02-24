@@ -45,7 +45,7 @@ export class AuthService {
     } catch (e) {
       // 🔥 Send login error event to Kafka
       await this.kafkaProducer.sendMessage(KafkaTopics.USER_LOGIN_ERROR, {
-        payload,
+        email: payload.email,
         clientIp,
         deviceInfo,
         error: e.message,

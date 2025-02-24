@@ -16,6 +16,8 @@ export const PASSWORD_MAX_LENGTH = 16;
 
 // ENV Variables
 export const appName = process.env.APP_NAME ?? 'AUTH_MICROSERVICE';
+export const rateLimitCount = process.env.RATE_LIMIT ?? '20';
+export const adminEmail = process.env.ADMIN_EMAIL ?? 'thevetdoctor@gmail.com';
 export const kafkaUrl = process.env.KAFKA_URL
   ? process.env.KAFKA_URL
   : '104.248.162.129:9092';
@@ -41,6 +43,7 @@ export enum KafkaTopics {
   MAIL_SENT = 'mail.sent',
   USER_LOGIN = 'user.login',
   USER_LOGIN_ERROR = 'user.login.error',
+  USER_LOGIN_ERROR_ALERT = 'user.login.error.alert',
   USER_SIGNUP = 'user.signup',
   USER_SIGNUP_ERROR = 'user.signup.error',
 }

@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
-import { appName, kafkaUrl } from './utils';
+import { appName, kafkaUrl, rateLimitCount, rateLimiter } from './utils';
 
 async function bootstrap() {
   const port = process.env.PORT ?? 3001;
@@ -9,6 +9,8 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
     app.enableCors();
+    app.use(rateLimiter);
+
     const config = new DocumentBuilder()
       .setTitle(appName)
       .setDescription(`API Docs for ${appName}`)
@@ -30,6 +32,10 @@ async function bootstrap() {
     const app_url = await app.getUrl();
 
     console.log('KAFKA_URL:', kafkaUrl ? kafkaUrl : 'Not Supplied');
+    console.log(
+      'RATE_LIMIT:',
+      rateLimitCount ? rateLimitCount : 'Not Supplied',
+    );
 
     console.log(`Application is running on: ${app_url}`);
     console.log(`Swagger Docs path for ${appName}: ${app_url}/api-docs`);

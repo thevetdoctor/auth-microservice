@@ -1,6 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UAParser } from 'ua-parser-js';
+import rateLimit from 'express-rate-limit';
+import { rateLimitCount } from './util.constant';
 
 export const checkForRequiredFields = (
   requiredFields: string[],
@@ -105,3 +107,14 @@ export const getIdentity = (
   console.log('Client IP:', clientIp, 'Device', deviceInfo);
   return { clientIp, deviceInfo };
 };
+
+export const rateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: parseInt(`${rateLimitCount}`, 10),
+  message: {
+    success: false,
+    message: 'Too many requests, please try again later.',
+  },
+  standardHeaders: true, // Return rate limit info in `RateLimit-*` headers
+  legacyHeaders: false, // Disable `X-RateLimit-*` headers
+});
