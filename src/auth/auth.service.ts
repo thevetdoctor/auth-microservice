@@ -23,6 +23,15 @@ export class AuthService {
   ) {}
 
   async login(payload: LoginDTO, clientIp: string, deviceInfo: string) {
+    const currentTime = new Date().toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long', // Use 'short' or '2-digit' for different formats
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: true,
+    });
     try {
       const { email, password } = payload;
 
@@ -40,6 +49,7 @@ export class AuthService {
         email: payload.email,
         clientIp,
         deviceInfo,
+        currentTime,
       });
       return { accessToken: token };
     } catch (e) {
@@ -48,6 +58,7 @@ export class AuthService {
         email: payload.email,
         clientIp,
         deviceInfo,
+        currentTime,
         error: e.message,
       });
       throw new BadRequestException(e.message);
@@ -55,13 +66,24 @@ export class AuthService {
   }
 
   async signup(payload: SignupDTO, clientIp: string, deviceInfo: string) {
+    const currentTime = new Date().toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long', // Use 'short' or '2-digit' for different formats
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: true,
+    });
     try {
       const user = await this.userService.createUser(payload);
+
       // 🔥 Send signup event to Kafka
       await this.kafkaProducer.sendMessage(KafkaTopics.USER_SIGNUP, {
         ...user,
         clientIp,
         deviceInfo,
+        currentTime,
       });
       return { user };
     } catch (e) {
@@ -70,6 +92,7 @@ export class AuthService {
         payload,
         clientIp,
         deviceInfo,
+        currentTime,
         error: e.message,
       });
       throw new BadRequestException(e.message);
