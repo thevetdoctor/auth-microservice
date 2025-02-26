@@ -8,7 +8,7 @@ import { ProducerService } from 'src/kafka/producer/producer.service';
 import { UserService } from 'src/user/user.service';
 import {
   checkForRequiredFields,
-  currentTime,
+  getCurrentTime,
   KafkaTopics,
   validateEmailField,
   validatePassword,
@@ -25,6 +25,7 @@ export class AuthService {
   ) {}
 
   async login(payload: LoginDTO, clientIp: string, deviceInfo: string) {
+    const currentTime = `${getCurrentTime()} UTC`;
     try {
       const { email, password } = payload;
 
@@ -36,7 +37,6 @@ export class AuthService {
         throw new BadRequestException('User not found');
       }
       const token = this.jwtService.sign(payload);
-
       // 🔥 Send login event to Kafka
       await this.kafkaProducer.sendMessage(KafkaTopics.USER_LOGIN, {
         email: payload.email,
@@ -59,6 +59,7 @@ export class AuthService {
   }
 
   async signup(payload: SignupDTO, clientIp: string, deviceInfo: string) {
+    const currentTime = `${getCurrentTime()} UTC`;
     try {
       const user = await this.userService.createUser(payload);
 

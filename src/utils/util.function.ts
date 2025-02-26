@@ -119,12 +119,14 @@ export const rateLimiter = rateLimit({
   legacyHeaders: false, // Disable `X-RateLimit-*` headers
 });
 
-export const currentTime = new Date().toLocaleString('en-US', {
-  year: 'numeric',
-  month: 'long', // Use 'short' or '2-digit' for different formats
-  day: 'numeric',
-  hour: 'numeric',
-  minute: 'numeric',
-  second: 'numeric',
-  hour12: true,
-});
+export const getCurrentTime = () =>
+  new Date().toLocaleString('en-US', {
+    timeZone: 'UTC',
+    year: 'numeric',
+    month: 'long', // Use 'short' or '2-digit' for different formats
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true,
+  });
