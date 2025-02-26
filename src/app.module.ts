@@ -7,9 +7,10 @@ import { AuthModule } from './auth/auth.module';
 import { ProducerService } from './kafka/producer/producer.service';
 import { ConsumerService } from './kafka/consumer/consumer.service';
 import { KafkaModule } from './kafka/kafka.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [DatabaseModule, UserModule, AuthModule, KafkaModule],
+  imports: [DatabaseModule, UserModule, AuthModule, KafkaModule, HttpModule],
   controllers: [AppController],
   providers: [AppService, ProducerService, ConsumerService],
 })

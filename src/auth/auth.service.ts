@@ -8,11 +8,13 @@ import { ProducerService } from 'src/kafka/producer/producer.service';
 import { UserService } from 'src/user/user.service';
 import {
   checkForRequiredFields,
+  currentTime,
   KafkaTopics,
   validateEmailField,
   validatePassword,
 } from 'src/utils';
 import { LoginDTO, SignupDTO } from './auth.dto';
+const axios = require('axios');
 
 @Injectable()
 export class AuthService {
@@ -23,15 +25,6 @@ export class AuthService {
   ) {}
 
   async login(payload: LoginDTO, clientIp: string, deviceInfo: string) {
-    const currentTime = new Date().toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long', // Use 'short' or '2-digit' for different formats
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      hour12: true,
-    });
     try {
       const { email, password } = payload;
 
@@ -66,15 +59,6 @@ export class AuthService {
   }
 
   async signup(payload: SignupDTO, clientIp: string, deviceInfo: string) {
-    const currentTime = new Date().toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long', // Use 'short' or '2-digit' for different formats
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      hour12: true,
-    });
     try {
       const user = await this.userService.createUser(payload);
 
@@ -96,6 +80,25 @@ export class AuthService {
         error: e.message,
       });
       throw new BadRequestException(e.message);
+    }
+  }
+
+  public async getLocation(ip): Promise<string> {
+    try {
+      // const ipv4 = getIPv4(ip);
+      const serverIp = process.env.SERVER_IP ?? '';
+      if (!serverIp) {
+        return 'Unknown';
+      }
+      ip = ip === '::1' ? serverIp : ip;
+      const response = await axios.get(`http://ip-api.com/json/${ip}`);
+      console.log(ip, response.data);
+      const { city, country, isp } = response.data;
+      const parsedLocation = `${city}, ${country}: ${isp}`;
+      return parsedLocation;
+    } catch (error) {
+      console.error('Error fetching location:', error);
+      return null;
     }
   }
 }

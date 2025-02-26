@@ -9,6 +9,35 @@ import { getIdentity } from 'src/utils';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  async handleRequest(
+    method: string,
+    url: string,
+    body: any,
+    req: Request,
+    res: Response,
+  ) {
+    console.log(method, url, body);
+    if (
+      method === 'POST' &&
+      url.startsWith('auth/') &&
+      url.indexOf('login') >= 0
+    ) {
+      return this.login(body, req, res);
+    } else if (
+      method === 'POST' &&
+      url.startsWith('auth/') &&
+      url.indexOf('signup') >= 0
+    ) {
+      return this.signup(body, req, res);
+    }
+    return response(
+      res,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      null,
+      'Invalid request',
+    );
+  }
+
   @Post('login')
   async login(
     @Body() payload: LoginDTO,
@@ -16,7 +45,8 @@ export class AuthController {
     @Res() res: Response,
   ) {
     try {
-      const { clientIp, deviceInfo } = getIdentity(req);
+      let { clientIp: ip, deviceInfo } = getIdentity(req);
+      let clientIp = await this.authService.getLocation(ip);
       const token = await this.authService.login(payload, clientIp, deviceInfo);
       return response(res, HttpStatus.CREATED, { ...token }, null, 'Logged in');
     } catch (e) {
@@ -36,7 +66,8 @@ export class AuthController {
     @Res() res: Response,
   ) {
     try {
-      const { clientIp, deviceInfo } = getIdentity(req);
+      let { clientIp: ip, deviceInfo } = getIdentity(req);
+      const clientIp = await this.authService.getLocation(ip);
       await this.authService.signup(payload, clientIp, deviceInfo);
       return response(
         res,
@@ -48,7 +79,7 @@ export class AuthController {
     } catch (e) {
       return response(
         res,
-        e.response.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
+        e.response?.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
         null,
         e.message,
       );
