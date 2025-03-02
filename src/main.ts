@@ -1,7 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
-import { appName, kafkaUrl, rateLimitCount, rateLimiter } from './utils';
+import {
+  appName,
+  dbUrl,
+  feedbackServiceUrl,
+  kafkaUrl,
+  mailServiceUrl,
+  rateLimitCount,
+  rateLimiter,
+} from './utils';
 
 async function bootstrap() {
   const port = process.env.PORT ?? 3001;
@@ -32,6 +40,15 @@ async function bootstrap() {
     const app_url = await app.getUrl();
 
     console.log('KAFKA_URL:', kafkaUrl ? kafkaUrl : 'Not Supplied');
+    console.log('DB_URL:', dbUrl ? dbUrl : 'Not Supplied');
+    console.log(
+      'MAIL_SERVICE_URL:',
+      mailServiceUrl ? mailServiceUrl : 'Not Supplied',
+    );
+    console.log(
+      'FEEDBACK_SERVICE_URL:',
+      feedbackServiceUrl ? feedbackServiceUrl : 'Not Supplied',
+    );
     console.log(
       'RATE_LIMIT:',
       rateLimitCount ? rateLimitCount : 'Not Supplied',

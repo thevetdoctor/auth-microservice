@@ -30,6 +30,7 @@ import { firstValueFrom } from 'rxjs';
 import { AuthController } from './auth/auth.controller';
 import { ModuleRef } from '@nestjs/core';
 import { LoginDTO, SignupDTO } from './auth/auth.dto';
+import { feedbackServiceUrl, mailServiceUrl } from './utils';
 const axios = require('axios');
 
 @Controller()
@@ -45,7 +46,6 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @All(':route')
   @ApiParam({
     name: 'route',
     required: true,
@@ -64,6 +64,7 @@ export class AppController {
   })
   @ApiOperation({ summary: 'Handles all requests' })
   @ApiResponse({ status: 200, description: 'Fallback response' })
+  @All(':route')
   async proxy(
     @Req() req: Request,
     @Param('route') route: string,
@@ -122,8 +123,8 @@ export class AppController {
     } else {
       // Define external microservices mapping
       const routeMap = {
-        '/mail': 'http://104.248.162.129:3100/',
-        '/orders': 'http://order-microservice:5002',
+        '/mail': mailServiceUrl,
+        '/feedback': feedbackServiceUrl,
       };
 
       // Find matching external service

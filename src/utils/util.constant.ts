@@ -18,9 +18,15 @@ export const PASSWORD_MAX_LENGTH = 16;
 export const appName = process.env.APP_NAME ?? 'AUTH_MICROSERVICE';
 export const rateLimitCount = process.env.RATE_LIMIT ?? '20';
 export const adminEmail = process.env.ADMIN_EMAIL ?? 'thevetdoctor@gmail.com';
+export const mailServiceUrl =
+  process.env.MAIL_SERVICE_URL ?? 'http://178.128.32.101:3100';
+export const feedbackServiceUrl =
+  process.env.FEEDBACK_SERVICE_URL ?? 'http://178.128.32.101:3200';
 export const kafkaUrl = process.env.KAFKA_URL
   ? process.env.KAFKA_URL
   : '104.248.162.129:9092';
+export const dbUrl = process.env.DB_URL ? process.env.DB_URL : '';
+export const env = process.env.NODE_ENV ? process.env.NODE_ENV : '';
 export const jwtSecret = process.env.JWT_SECRET
   ? process.env.JWT_SECRET
   : 'auth-microservice-secret-key';

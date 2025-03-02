@@ -26,7 +26,7 @@ export class UserService {
 
   async findUserByEmail(email: string): Promise<any> {
     const record = await this.userRepo.findOne({
-      where: { email, IsDeleted: false },
+      where: { email, isDeleted: false },
     });
     if (!record?.id) {
       return null;
