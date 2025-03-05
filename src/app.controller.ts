@@ -31,6 +31,7 @@ import { AuthController } from './auth/auth.controller';
 import { ModuleRef } from '@nestjs/core';
 import { LoginDTO, SignupDTO } from './auth/auth.dto';
 import { feedbackServiceUrl, mailServiceUrl } from './utils';
+import { response } from 'oba-http-response';
 const axios = require('axios');
 
 @Controller()
@@ -136,7 +137,7 @@ export class AppController {
         throw new HttpException('Route not found', HttpStatus.NOT_FOUND);
       }
 
-      const targetUrl = `${routeMap[serviceUrl]}${''}`;
+      const targetUrl = `${routeMap[serviceUrl]}/${route.split('/')[1]}`;
       console.log('url', url, route, targetUrl, method, body);
 
       // Forward the request externally
@@ -150,7 +151,8 @@ export class AppController {
             timeout: 5000,
           }),
         );
-        res.status(response.status).json(response.data);
+        return res.status(response.status).json(response.data);
+      // return response(res, response.status, response.data, null, 'Logged in');
       } catch (error) {
         console.log('error', error.message);
         if (axios.isAxiosError(error)) {
@@ -159,39 +161,47 @@ export class AppController {
           if (error.code === 'ECONNABORTED' || error.response?.status === 408) {
             // Timeout or explicit 408 error
             console.error('Request timeout:', error.config?.url);
-            res.status(408).json({
-              message: 'Request timed out. Please try again later.',
-              statusCode: 408,
-            });
+            return response(
+              res,
+              HttpStatus.REQUEST_TIMEOUT,
+              null,
+              'Request timed out. Please try again later',
+            );
           } else if (error.response) {
             // The request was made and the server responded with a status code
-            res.status(error.response.status).json({
-              message: error.response.data?.message || 'External service error',
-              statusCode: error.response.status,
-              data: error.response.data,
-            });
+            console.error('External service error:', error.response.data);
+            return response(
+              res,
+              error.response.status || HttpStatus.INTERNAL_SERVER_ERROR,
+              null,
+              error.response.data?.message || error.response.data?.error ? error.response.data?.error : 'External service error',
+            );
           } else if (error.request) {
             // The request was made but no response was received
-            console.error('No response received:', error.request);
-            res.status(502).json({
-              message: 'No response from external service',
-              statusCode: 502,
-            });
+            return response(
+              res,
+              HttpStatus.SERVICE_UNAVAILABLE,
+              null,
+              'No response from external service',
+            );
           } else {
             // Something happened in setting up the request that triggered an error
             console.error('Request setup error:', error.message);
-            res.status(500).json({
-              message: 'Internal request error',
-              statusCode: 500,
-            });
+            return response(
+              res,
+              HttpStatus.INTERNAL_SERVER_ERROR,
+              null,
+              error.message || 'Internal request error',
+            );
           }
         } else {
           // Non-Axios error (e.g., network issue, unexpected error)
-          console.error('Unexpected Error:', error);
-          res.status(500).json({
-            message: 'Unexpected error occurred',
-            statusCode: 500,
-          });
+          return response(
+            res,
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            null,
+            'Unexpected error occurred',
+          );
         }
       }
     }
