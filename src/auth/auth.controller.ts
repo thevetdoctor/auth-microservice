@@ -3,7 +3,7 @@ import { LoginDTO, SignupDTO } from './auth.dto';
 import { AuthService } from './auth.service';
 import { response } from 'oba-http-response';
 import { Request, Response } from 'express';
-import { getIdentity } from 'src/utils';
+import { getIdentity, getLocation } from 'src/utils';
 
 @Controller('auth')
 export class AuthController {
@@ -46,7 +46,7 @@ export class AuthController {
   ) {
     try {
       let { clientIp: ip, deviceInfo } = getIdentity(req);
-      let clientIp = await this.authService.getLocation(ip);
+      let clientIp = await getLocation(ip);
       const token = await this.authService.login(payload, clientIp, deviceInfo);
       return response(res, HttpStatus.CREATED, { ...token }, null, 'Logged in');
     } catch (e) {
@@ -67,7 +67,7 @@ export class AuthController {
   ) {
     try {
       let { clientIp: ip, deviceInfo } = getIdentity(req);
-      const clientIp = await this.authService.getLocation(ip);
+      const clientIp = await getLocation(ip);
       await this.authService.signup(payload, clientIp, deviceInfo);
       return response(
         res,

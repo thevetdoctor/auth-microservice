@@ -124,7 +124,7 @@ export class AppController {
       // Define external microservices mapping
       const routeMap = {
         '/mail': mailServiceUrl,
-        '/feedback': feedbackServiceUrl,
+        '/feedback': mailServiceUrl,
       };
 
       // Find matching external service

@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { UAParser } from 'ua-parser-js';
 import rateLimit from 'express-rate-limit';
 import { rateLimitCount } from './util.constant';
+const axios = require('axios');
 
 export const checkForRequiredFields = (
   requiredFields: string[],
@@ -130,3 +131,22 @@ export const getCurrentTime = () =>
     second: 'numeric',
     hour12: true,
   });
+
+export const getLocation = async (ip): Promise<string> => {
+  try {
+    // const ipv4 = getIPv4(ip);
+    const serverIp = process.env.SERVER_IP ?? '';
+    if (!serverIp) {
+      return 'Unknown';
+    }
+    ip = ip === '::1' ? serverIp : ip;
+    const response = await axios.get(`http://ip-api.com/json/${ip}`);
+    console.log(ip, response.data);
+    const { city, country, isp } = response.data;
+    const parsedLocation = `${city}, ${country}: ${isp}`;
+    return parsedLocation;
+  } catch (error) {
+    console.error('Error fetching location:', error);
+    return null;
+  }
+};

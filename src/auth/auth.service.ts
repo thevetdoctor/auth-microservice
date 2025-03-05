@@ -83,23 +83,4 @@ export class AuthService {
       throw new BadRequestException(e.message);
     }
   }
-
-  public async getLocation(ip): Promise<string> {
-    try {
-      // const ipv4 = getIPv4(ip);
-      const serverIp = process.env.SERVER_IP ?? '';
-      if (!serverIp) {
-        return 'Unknown';
-      }
-      ip = ip === '::1' ? serverIp : ip;
-      const response = await axios.get(`http://ip-api.com/json/${ip}`);
-      console.log(ip, response.data);
-      const { city, country, isp } = response.data;
-      const parsedLocation = `${city}, ${country}: ${isp}`;
-      return parsedLocation;
-    } catch (error) {
-      console.error('Error fetching location:', error);
-      return null;
-    }
-  }
 }
