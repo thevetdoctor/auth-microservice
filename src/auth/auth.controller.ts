@@ -13,8 +13,10 @@ import { response } from 'oba-http-response';
 import { Request, Response } from 'express';
 import { getIdentity, getLocation } from 'src/utils';
 import { ApiKeyGuard } from 'src/guards/apikey.guard';
+import { ApiSecurity } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiSecurity('x-api-key')
 @UseGuards(ApiKeyGuard)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

@@ -36,6 +36,10 @@ async function bootstrap() {
         },
         'JWT',
       )
+      .addApiKey(
+        { type: 'apiKey', name: 'x-api-key', in: 'header' }, // Define API key authentication
+        'x-api-key', // Security name
+      )
       .build();
     const document: OpenAPIObject = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api-docs', app, document);

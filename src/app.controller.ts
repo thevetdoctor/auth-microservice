@@ -23,6 +23,7 @@ import {
   ApiParam,
   getSchemaPath,
   ApiExtraModels,
+  ApiSecurity,
 } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { HttpService } from '@nestjs/axios';
@@ -49,6 +50,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @ApiSecurity('x-api-key')
   @UseGuards(ApiKeyGuard)
   @ApiParam({
     name: 'route',
