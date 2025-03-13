@@ -16,12 +16,15 @@ export class ApikeyService {
   async validateApiKey(apiKey: string): Promise<Apikeys | null> {
     try {
       const apikey = await this.apikeyRepo.findOne({
-        where: { key: apiKey, isActive: true },
+        where: { key: apiKey },
         attributes: ['key', 'userId', 'isActive'],
         raw: true,
       });
       if (!apikey) {
         throw new UnauthorizedException('Invalid Credentials');
+      }
+      if (!apikey.isActive) {
+        throw new UnauthorizedException('Inactive Credentials');
       }
       const userId = await this.userRepo.findOne({
         where: { id: apikey.userId },

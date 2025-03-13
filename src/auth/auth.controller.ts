@@ -1,4 +1,12 @@
-import { Controller, Post, Body, HttpStatus, Res, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpStatus,
+  Res,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { LoginDTO, SignupDTO } from './auth.dto';
 import { AuthService } from './auth.service';
 import { response } from 'oba-http-response';
