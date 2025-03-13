@@ -1,11 +1,13 @@
-import { Controller, Post, Body, HttpStatus, Res, Req } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, Res, Req, UseGuards } from '@nestjs/common';
 import { LoginDTO, SignupDTO } from './auth.dto';
 import { AuthService } from './auth.service';
 import { response } from 'oba-http-response';
 import { Request, Response } from 'express';
 import { getIdentity, getLocation } from 'src/utils';
+import { ApiKeyGuard } from 'src/guards/apikey.guard';
 
 @Controller('auth')
+@UseGuards(ApiKeyGuard)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

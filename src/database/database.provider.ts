@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { databaseConfig } from './config';
 import { Users } from 'src/user/user.entity';
 import { DEVELOPMENT, PRODUCTION, SEQUELIZE, TEST } from 'src/utils';
+import { Apikeys } from 'src/apikey/apikey.entity';
 
 export const databaseProviders = [
   {
@@ -43,7 +44,7 @@ export const databaseProviders = [
           logging: DB_LOGGING,
         });
       }
-      sequelize.addModels([Users]);
+      sequelize.addModels([Users, Apikeys]);
 
       try {
         await sequelize.sync({ alter: true });

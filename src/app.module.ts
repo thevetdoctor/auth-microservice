@@ -8,9 +8,17 @@ import { ProducerService } from './kafka/producer/producer.service';
 import { ConsumerService } from './kafka/consumer/consumer.service';
 import { KafkaModule } from './kafka/kafka.module';
 import { HttpModule } from '@nestjs/axios';
+import { ApikeyModule } from './apikey/apikey.module';
 
 @Module({
-  imports: [DatabaseModule, UserModule, AuthModule, KafkaModule, HttpModule],
+  imports: [
+    DatabaseModule,
+    UserModule,
+    AuthModule,
+    KafkaModule,
+    HttpModule,
+    ApikeyModule,
+  ],
   controllers: [AppController],
   providers: [AppService, ProducerService, ConsumerService],
 })

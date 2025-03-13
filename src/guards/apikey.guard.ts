@@ -1,0 +1,46 @@
+import {
+  BadRequestException,
+  CanActivate,
+  ExecutionContext,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { ApikeyService } from 'src/apikey/apikey.service';
+import { response } from 'oba-http-response';
+import { Response } from 'express';
+
+@Injectable()
+export class ApiKeyGuard implements CanActivate {
+  constructor(private apikeyService: ApikeyService) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const res: Response = context.switchToHttp().getResponse();
+    try {
+      const apiKey = request.headers['x-api-key'];
+
+      let validKey;
+      // this.apikeyService.generateApiKey('72e92164-fc49-4bed-a18c-83db2913533d').then(val => {
+      //   return val;
+      // });
+
+      await this.apikeyService.validateApiKey(apiKey).then((val) => {
+        validKey = val;
+        return val;
+      });
+      console.log(apiKey, validKey);
+
+      if (!validKey) {
+        throw new UnauthorizedException('Invalid Authorization: API Key');
+      }
+      // Attach the user ID to the request for further processing
+      request.user = { id: validKey.userId };
+
+      return true;
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
+  }
+}

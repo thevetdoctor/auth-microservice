@@ -9,6 +9,7 @@ import {
   Post,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -32,6 +33,7 @@ import { ModuleRef } from '@nestjs/core';
 import { LoginDTO, SignupDTO } from './auth/auth.dto';
 import { feedbackServiceUrl, mailServiceUrl } from './utils';
 import { response } from 'oba-http-response';
+import { ApiKeyGuard } from './guards/apikey.guard';
 const axios = require('axios');
 
 @Controller()
@@ -47,6 +49,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @UseGuards(ApiKeyGuard)
   @ApiParam({
     name: 'route',
     required: true,
@@ -104,22 +107,14 @@ export class AppController {
         const handlerMethod = controller.handleRequest; // This should be implemented in each controller
 
         if (typeof handlerMethod !== 'function') {
-          console.log(
-            'inter',
-            url,
-            route,
-            routeMap[controllerKey],
-            handlerMethod,
-            controller,
-          );
           return res.status(400).json({ message: 'Invalid route handler' });
         }
 
         // Call the controller method dynamically
         await handlerMethod.call(controller, method, route, body, req, res);
-      } catch (error) {
-        console.error('Internal request failed:', error);
-        return res.status(500).json({ message: 'Internal Server Error' });
+      } catch (e) {
+        console.error('Internal request failed:', e);
+        throw e;
       }
     } else {
       // Define external microservices mapping
@@ -152,15 +147,10 @@ export class AppController {
           }),
         );
         return res.status(response.status).json(response.data);
-      // return response(res, response.status, response.data, null, 'Logged in');
       } catch (error) {
-        console.log('error', error.message);
         if (axios.isAxiosError(error)) {
-          console.error('Axios Error:', error.message);
-
           if (error.code === 'ECONNABORTED' || error.response?.status === 408) {
             // Timeout or explicit 408 error
-            console.error('Request timeout:', error.config?.url);
             return response(
               res,
               HttpStatus.REQUEST_TIMEOUT,
@@ -169,12 +159,13 @@ export class AppController {
             );
           } else if (error.response) {
             // The request was made and the server responded with a status code
-            console.error('External service error:', error.response.data);
             return response(
               res,
               error.response.status || HttpStatus.INTERNAL_SERVER_ERROR,
               null,
-              error.response.data?.message || error.response.data?.error ? error.response.data?.error : 'External service error',
+              error.response.data?.message || error.response.data?.error
+                ? error.response.data?.error
+                : 'External service error',
             );
           } else if (error.request) {
             // The request was made but no response was received
@@ -186,7 +177,6 @@ export class AppController {
             );
           } else {
             // Something happened in setting up the request that triggered an error
-            console.error('Request setup error:', error.message);
             return response(
               res,
               HttpStatus.INTERNAL_SERVER_ERROR,

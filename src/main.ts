@@ -10,6 +10,7 @@ import {
   rateLimitCount,
   rateLimiter,
 } from './utils';
+import { CustomHttpExceptionFilter, SequelizeExceptionFilter } from './filters';
 
 async function bootstrap() {
   const port = process.env.PORT ?? 3001;
@@ -18,7 +19,10 @@ async function bootstrap() {
 
     app.enableCors();
     app.use(rateLimiter);
-
+    app.useGlobalFilters(
+      new CustomHttpExceptionFilter(),
+      new SequelizeExceptionFilter(),
+    );
     const config = new DocumentBuilder()
       .setTitle(appName)
       .setDescription(`API Docs for ${appName}`)

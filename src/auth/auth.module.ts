@@ -5,6 +5,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { KafkaModule } from '../kafka/kafka.module';
 import { expiryDuration, jwtSecret } from 'src/utils';
 import { UserModule } from 'src/user/user.module';
+import { ApikeyService } from 'src/apikey/apikey.service';
+import { ApikeyProviders } from 'src/apikey/apikey.provider';
 
 @Module({
   imports: [
@@ -16,7 +18,7 @@ import { UserModule } from 'src/user/user.module';
     UserModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, ApikeyService, ...ApikeyProviders],
   exports: [AuthService],
 })
 export class AuthModule {}
