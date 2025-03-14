@@ -32,7 +32,7 @@ import { firstValueFrom } from 'rxjs';
 import { AuthController } from './auth/auth.controller';
 import { ModuleRef } from '@nestjs/core';
 import { LoginDTO, SignupDTO } from './auth/auth.dto';
-import { feedbackServiceUrl, mailServiceUrl } from './utils';
+import { feedbackServiceUrl, internalRoutes, mailServiceUrl } from './utils';
 import { response } from 'oba-http-response';
 import { ApiKeyGuard } from './guards/apikey.guard';
 const axios = require('axios');
@@ -80,9 +80,14 @@ export class AppController {
     const { 'content-length': _, ...filteredHeaders } = req.headers;
 
     // Define internal routes
-    const internalRoutes = ['auth/login', 'auth/signup'];
 
     console.log('url', url);
+    if (!internalRoutes.length) {
+      throw new HttpException(
+        'internalRoutes not supplied',
+        HttpStatus.NOT_FOUND,
+      );
+    }
     if (internalRoutes.includes(route)) {
       // Define route mappings to controllers (internal)
       const routeMap = {

@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 export const SEQUELIZE = 'SEQUELIZE';
 export const DEVELOPMENT = 'development';
 export const TEST = 'test';
@@ -23,17 +26,16 @@ export const mailServiceUrl =
   process.env.MAIL_SERVICE_URL ?? 'http://178.128.32.101:3100';
 export const feedbackServiceUrl =
   process.env.FEEDBACK_SERVICE_URL ?? 'http://178.128.32.101:3200';
-export const kafkaUrl = process.env.KAFKA_URL
-  ? process.env.KAFKA_URL
-  : '104.248.162.129:9092';
-export const dbUrl = process.env.DB_URL ? process.env.DB_URL : '';
-export const env = process.env.NODE_ENV ? process.env.NODE_ENV : '';
-export const jwtSecret = process.env.JWT_SECRET
-  ? process.env.JWT_SECRET
-  : 'auth-microservice-secret-key';
+export const kafkaUrl = process.env.KAFKA_URL ?? '104.248.162.129:9092';
+export const dbUrl = process.env.DB_URL ?? '';
+export const env = process.env.NODE_ENV ?? '';
+export const jwtSecret =
+  process.env.JWT_SECRET ?? 'auth-microservice-secret-key';
 export const expiryDuration = process.env.JWT_DURATION_EXPIRY
   ? String(process.env.JWT_DURATION_EXPIRY)
   : '1h';
+export const internalRoutes = process.env.INTERNAL_ROUTES ?? [];
+export const port = process.env.PORT ?? 3001;
 
 export enum AppRole {
   ADMIN = 'admin',

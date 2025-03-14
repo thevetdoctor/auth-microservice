@@ -5,15 +5,16 @@ import {
   appName,
   dbUrl,
   feedbackServiceUrl,
+  internalRoutes,
   kafkaUrl,
   mailServiceUrl,
+  port,
   rateLimitCount,
   rateLimiter,
 } from './utils';
 import { CustomHttpExceptionFilter, SequelizeExceptionFilter } from './filters';
 
 async function bootstrap() {
-  const port = process.env.PORT ?? 3001;
   try {
     const app = await NestFactory.create(AppModule);
 
@@ -60,6 +61,10 @@ async function bootstrap() {
     console.log(
       'RATE_LIMIT:',
       rateLimitCount ? rateLimitCount : 'Not Supplied',
+    );
+    console.log(
+      'INTERNAL_ROUTES:',
+      internalRoutes ? internalRoutes : 'Not Supplied',
     );
 
     console.log(`Application is running on: ${app_url}`);
