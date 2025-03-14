@@ -26,9 +26,9 @@ export class ApiKeyGuard implements CanActivate {
       // });
 
       if (!apiKey) {
-        console.log('!(x-api-key)', 'Protected Route');
         throw new UnauthorizedException('Protected Route');
       }
+      console.log('(x-api-key)', apiKey);
       const validKey = await this.apikeyService.validateApiKey(apiKey);
       console.log(apiKey, validKey ? 'valid' : 'invalid');
 

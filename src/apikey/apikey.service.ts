@@ -20,7 +20,7 @@ export class ApikeyService {
         attributes: ['key', 'userId', 'isActive'],
         raw: true,
       });
-      console.log('apiKey', apikey);
+      console.log('apikey', apikey);
       if (!apikey) {
         throw new UnauthorizedException('Invalid API Credentials');
       }

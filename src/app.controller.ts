@@ -85,7 +85,7 @@ export class AppController {
     if (internalRoutes.includes(route)) {
       // Define route mappings to controllers (internal)
       const routeMap = {
-        '/auth': AuthController,
+        'auth': AuthController,
         // '/users': UsersController,
         // '/orders': OrdersController,
       };
@@ -121,8 +121,8 @@ export class AppController {
     } else {
       // Define external microservices mapping
       const routeMap = {
-        '/mail': mailServiceUrl,
-        '/feedback': mailServiceUrl,
+        'mail': mailServiceUrl,
+        'feedback': mailServiceUrl,
       };
 
       // Find matching external service
