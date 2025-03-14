@@ -82,6 +82,7 @@ export class AppController {
     // Define internal routes
     const internalRoutes = ['auth', 'auth/login', 'auth/signup'];
 
+    console.log('url', url);
     if (internalRoutes.includes(route)) {
       // Define route mappings to controllers (internal)
       const routeMap = {
@@ -89,7 +90,6 @@ export class AppController {
         // '/users': UsersController,
         // '/orders': OrdersController,
       };
-      console.log('url', url);
       // Find the appropriate controller based on the route prefix
       const controllerKey = Object.keys(routeMap).find((prefix) =>
         url.startsWith(prefix),
@@ -121,8 +121,8 @@ export class AppController {
     } else {
       // Define external microservices mapping
       const routeMap = {
-        'mail': mailServiceUrl,
-        'feedback': mailServiceUrl,
+        '/mail': mailServiceUrl,
+        '/feedback': mailServiceUrl,
       };
 
       // Find matching external service
@@ -133,9 +133,9 @@ export class AppController {
       if (!serviceUrl) {
         throw new HttpException('Route not found', HttpStatus.NOT_FOUND);
       }
-
-      const targetUrl = `${routeMap[serviceUrl]}/${route.split('/')[1]}`;
-      console.log('url', url, route, targetUrl, method, body);
+      const path = route.split('/')[1] ? route.split('/')[1] : '';
+      const targetUrl = `${routeMap[serviceUrl]}/${path}`;
+      console.log('url', url, route, path, targetUrl, method, body);
 
       // Forward the request externally
       try {
