@@ -80,7 +80,7 @@ export class AppController {
     const { 'content-length': _, ...filteredHeaders } = req.headers;
 
     // Define internal routes
-    const internalRoutes = ['auth', 'auth/login', 'auth/signup'];
+    const internalRoutes = ['auth/login', 'auth/signup'];
 
     console.log('url', url);
     if (internalRoutes.includes(route)) {
