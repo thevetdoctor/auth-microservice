@@ -20,19 +20,21 @@ export class ApikeyService {
         attributes: ['key', 'userId', 'isActive'],
         raw: true,
       });
+      console.log('apiKey', apikey);
       if (!apikey) {
-        throw new UnauthorizedException('Invalid Credentials');
+        throw new UnauthorizedException('Invalid API Credentials');
       }
       if (!apikey.isActive) {
-        throw new UnauthorizedException('Inactive Credentials');
+        throw new UnauthorizedException('Inactive API Credentials');
       }
       const userId = await this.userRepo.findOne({
         where: { id: apikey.userId },
         attributes: ['id'],
         raw: true,
       });
+      console.log('userId', userId);
       if (!userId) {
-        throw new UnauthorizedException('Invalid User');
+        throw new UnauthorizedException('Invalid API User');
       }
       return apikey;
     } catch (e) {
