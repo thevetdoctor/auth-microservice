@@ -86,7 +86,7 @@ export class AppController {
     if (internalRoutes.includes(route)) {
       // Define route mappings to controllers (internal)
       const routeMap = {
-        'auth': AuthController,
+        '/auth': AuthController,
         // '/users': UsersController,
         // '/orders': OrdersController,
       };
