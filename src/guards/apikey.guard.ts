@@ -24,6 +24,7 @@ export class ApiKeyGuard implements CanActivate {
       // this.apikeyService.generateApiKey('72e92164-fc49-4bed-a18c-83db2913533d').then(val => {
       //   return val;
       // });
+      console.log('request.headers', request.headers);
 
       if (!apiKey) {
         throw new UnauthorizedException('Protected Route');
