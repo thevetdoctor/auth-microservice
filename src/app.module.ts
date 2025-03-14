@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
@@ -9,6 +9,7 @@ import { ConsumerService } from './kafka/consumer/consumer.service';
 import { KafkaModule } from './kafka/kafka.module';
 import { HttpModule } from '@nestjs/axios';
 import { ApikeyModule } from './apikey/apikey.module';
+import { LoggerMiddleware } from './middlewares';
 
 @Module({
   imports: [
@@ -22,4 +23,8 @@ import { ApikeyModule } from './apikey/apikey.module';
   controllers: [AppController],
   providers: [AppService, ProducerService, ConsumerService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
