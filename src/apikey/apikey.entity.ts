@@ -27,6 +27,10 @@ export class Apikeys extends Model {
   key: string;
 
   @ApiProperty()
+  @Column({ unique: true })
+  email: string;
+
+  @ApiProperty()
   @Column({
     type: DataType.STRING,
     allowNull: false,

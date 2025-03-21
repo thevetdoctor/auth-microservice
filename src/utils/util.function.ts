@@ -99,12 +99,12 @@ export const getIdentity = (
   req: any,
 ): { clientIp: string; deviceInfo: string } => {
   const parser = new UAParser(req.headers['user-agent']); // Get device info
-  console.log(
-    req.headers,
-    parser.getBrowser(),
-    parser.getOS(),
-    parser.getBrowser(),
-  );
+  // console.log(
+  //   req.headers,
+  //   parser.getBrowser(),
+  //   parser.getOS(),
+  //   parser.getBrowser(),
+  // );
   const deviceInfo = `${parser.getBrowser().name} on ${parser.getOS().name} (${parser.getDevice().model || 'Unknown Device'})`;
   let clientIp =
     (req.headers['x-forwarded-for'] as string)?.split(',')[0] || req.ip;

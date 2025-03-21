@@ -21,7 +21,7 @@ export class Users extends Model {
   id: string;
 
   @ApiProperty()
-  @Column
+  @Column({ unique: true })
   email: string;
 
   @ApiProperty()

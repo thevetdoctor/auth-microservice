@@ -17,7 +17,7 @@ export class ApikeyService {
     try {
       const apikey = await this.apikeyRepo.findOne({
         where: { key: apiKey },
-        attributes: ['key', 'userId', 'isActive'],
+        attributes: ['key', 'userId', 'isActive', 'email'],
         raw: true,
       });
       console.log('apikey', apikey);
