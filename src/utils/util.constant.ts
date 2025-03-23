@@ -19,6 +19,7 @@ export const PASSWORD_MIN_LENGTH = 8;
 export const PASSWORD_MAX_LENGTH = 16;
 
 // ENV Variables
+export const encryptionKey = process.env.ENCRYPTION_KEY ?? 'undefinedkey'
 export const appName = process.env.APP_NAME ?? 'AUTH_MICROSERVICE';
 export const rateLimitCount = process.env.RATE_LIMIT ?? '20';
 export const adminEmail = process.env.ADMIN_EMAIL ?? 'thevetdoctor@gmail.com';

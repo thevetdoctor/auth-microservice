@@ -6,10 +6,10 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { ApikeyService } from 'src/apikey/apikey.service';
-import { response } from 'oba-http-response';
 import { Response } from 'express';
+import { encryptionKey } from 'src/utils';
+const { AES, enc } = require('crypto-js');
 
 @Injectable()
 export class ApiKeyGuard implements CanActivate {
@@ -36,7 +36,11 @@ export class ApiKeyGuard implements CanActivate {
         throw new UnauthorizedException('Invalid Authorization: API Key');
       }
       // Attach the user ID to the request for further processing
-      request.user = { id: validKey.userId };
+      const encrypted = AES.encrypt(
+        JSON.stringify(validKey),
+        encryptionKey,
+      ).toString();
+      request.body.user = encrypted;
 
       return true;
     } catch (e) {

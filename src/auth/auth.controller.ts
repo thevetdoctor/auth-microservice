@@ -97,4 +97,23 @@ export class AuthController {
       );
     }
   }
+
+  @Post('validate')
+  async validate(
+    @Body() payload: LoginDTO,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    try {
+      const userData = req.body.user;
+      return response(res, HttpStatus.OK, userData, null, 'Validated');
+    } catch (e) {
+      return response(
+        res,
+        e.response.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
+        null,
+        e.message,
+      );
+    }
+  }
 }
