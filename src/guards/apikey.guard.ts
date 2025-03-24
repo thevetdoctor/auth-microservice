@@ -40,7 +40,7 @@ export class ApiKeyGuard implements CanActivate {
         JSON.stringify(validKey),
         encryptionKey,
       ).toString();
-      request.body.user = encrypted;
+      request['user'] = encrypted;
 
       return true;
     } catch (e) {

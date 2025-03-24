@@ -6,6 +6,7 @@ import {
   Res,
   Req,
   UseGuards,
+  Get,
 } from '@nestjs/common';
 import { LoginDTO, SignupDTO } from './auth.dto';
 import { AuthService } from './auth.service';
@@ -98,14 +99,14 @@ export class AuthController {
     }
   }
 
-  @Post('validate')
+  @Get('validate')
   async validate(
     @Body() payload: LoginDTO,
     @Req() req: Request,
     @Res() res: Response,
   ) {
     try {
-      const userData = req.body.user;
+      const userData = req['user'];
       return response(res, HttpStatus.OK, userData, null, 'Validated');
     } catch (e) {
       return response(
