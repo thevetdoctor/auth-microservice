@@ -44,7 +44,7 @@ export class ApiKeyGuard implements CanActivate {
 
       return true;
     } catch (e) {
-      throw new BadRequestException(e);
+      throw new UnauthorizedException(e);
     }
   }
 }

@@ -6,6 +6,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { KafkaModule } from 'src/kafka/kafka.module';
 import { UserModule } from 'src/user/user.module';
+import { ApikeyService } from 'src/apikey/apikey.service';
+import { ApikeyProviders } from 'src/apikey/apikey.provider';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -21,7 +23,7 @@ describe('AuthController', () => {
         UserModule,
       ],
       controllers: [AuthController],
-      providers: [AuthService, UserService],
+      providers: [AuthService, UserService, ApikeyService, ...ApikeyProviders],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
