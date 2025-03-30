@@ -170,7 +170,9 @@ export class AppController {
               res,
               error.response.status || HttpStatus.INTERNAL_SERVER_ERROR,
               null,
-              error.response?.data?.message || error.response?.data?.error || 'External service error'
+              error.response?.data?.message ||
+                error.response?.data?.error ||
+                'External service error',
             );
           } else if (error.request) {
             // The request was made but no response was received

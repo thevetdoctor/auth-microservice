@@ -9,7 +9,12 @@ describe('ApikeyService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ApikeyService, UserService, ...UserProviders, ...ApikeyProviders],
+      providers: [
+        ApikeyService,
+        UserService,
+        ...UserProviders,
+        ...ApikeyProviders,
+      ],
     }).compile();
 
     service = module.get<ApikeyService>(ApikeyService);

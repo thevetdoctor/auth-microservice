@@ -100,10 +100,7 @@ export class AuthController {
   }
 
   @Get('validate')
-  async validate(
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
+  async validate(@Req() req: Request, @Res() res: Response) {
     try {
       const userData = req['user'];
       return response(res, HttpStatus.OK, userData, null, 'Validated');
@@ -111,6 +108,28 @@ export class AuthController {
       return response(
         res,
         e.response.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
+        null,
+        e.message,
+      );
+    }
+  }
+
+  @Get('getlocation')
+  async getLocation(@Req() req: Request, @Res() res: Response) {
+    try {
+      let { clientIp: ip, deviceInfo } = getIdentity(req);
+      const clientIp = await getLocation(ip);
+      return response(
+        res,
+        HttpStatus.CREATED,
+        { ip, location: clientIp, deviceInfo },
+        null,
+        'Client details',
+      );
+    } catch (e) {
+      return response(
+        res,
+        e.response?.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
         null,
         e.message,
       );
